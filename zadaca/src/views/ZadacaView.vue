@@ -9,6 +9,6 @@ export default {
 
     components: {
         FormComponent,
-    }
+    },
 }
 </script>

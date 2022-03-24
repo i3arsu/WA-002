@@ -3,18 +3,19 @@
     <v-container>
         <v-text-field
             label="name"
-            :counter="10"
-            @change="getAll($event)">
+            v-model="name"
+            :counter="10">
         </v-text-field>
         <v-btn
             color="success"
             class="mr-4"
-            @click="getAll">
+            @click="getAll()">
             Submit
         </v-btn>
         <div>
             <v-data-table
-            :items="allData"
+            :headers="headers"
+            :items="newData"
             :items-per-page="10"
             class="elevation-1"
         ></v-data-table>
@@ -29,10 +30,24 @@
 
     data: () => ({
     ageData: {},
+    name: "",
     genderData: {},
     nationalityData: {},
     allData: [],
     newData: [],
+    headers: [
+      {
+        text: "Name",
+        align: "start",
+        sortable: false,
+        value: "name",
+      },
+      { text: "Country", value: "country" },
+      { text: "Probability", value: "probability of country" },
+      { text: "Age", value: "age" },
+      { text: "Gender", value: "gender" },
+      { text: "Probability of Gender", value: "probability of gender" },
+    ],
   }),
   methods: {
     getAge(value) {
@@ -50,10 +65,10 @@
         .then((response) => response.json())
         .then((data) => (this.nationalityData = data));
     },
-    getAll(value) {
-      this.getAge(value);
-      this.getGender(value);
-      this.getNationality(value);
+    getAll() {
+      this.getAge(this.name);
+      this.getGender(this.name);
+      this.getNationality(this.name);
       let array1 = [];
       this.allData = [this.ageData, this.genderData, this.nationalityData];
       this.allData = this.allData[2].country.forEach((country) =>
@@ -70,7 +85,8 @@
           "probability of country": array[2].probability,
         })
       );
-      array2.forEach((object) => this.newData.push(object));
+      this.newData = array2;
+      console.log(this.newData)
     },
   },
 };
