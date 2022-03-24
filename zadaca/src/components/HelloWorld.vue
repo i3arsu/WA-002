@@ -1,6 +1,8 @@
 <template>
-  <v-container class="sredina">
-    <router-link to="/about">Zadaca</router-link>
+  <v-container>
+    <div class="sredina">
+      <router-link to="/about">Zadaca</router-link>
+    </div>
   </v-container>
 </template>
 
@@ -15,6 +17,9 @@
 
 <style>
 .sredina{
-  align-content: center;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+  text-align: center;
 }
 </style>
