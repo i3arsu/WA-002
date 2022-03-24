@@ -4,18 +4,22 @@
         <v-text-field
             v-model="name"
             :counter="10"
-            :rules="nameRules"
             label="Name"
-            required>
+            @change="getAll($event)">
         </v-text-field>
         <v-btn
-            :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="validate">
+            @click="getAll">
             Submit
         </v-btn>
-
+        <div>
+            <v-data-table
+            :items="allData"
+            :items-per-page="5"
+            class="elevation-1"
+        ></v-data-table>
+        </div>
     </v-container>
   </v-form>
 </template>
@@ -25,18 +29,50 @@
     name:"FormComponent",
 
     data: () => ({
-      valid: true,
-      name: '',
-      nameRules: [
-        v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
-      ],
-    }),
+    ageData: {},
+    genderData: {},
+    nationalityData: {},
+    allData: [],
+  }),
 
     methods: {
-      validate () {
-        this.$refs.form.validate()
-      },
-      }
-    }
+    getAge(value) {
+      fetch("https://api.agify.io?name=" + value)
+        .then((response) => response.json())
+        .then((data) => (this.ageData = data));
+    },
+    getGender(value) {
+      fetch("https://api.genderize.io?name=" + value)
+        .then((response) => response.json())
+        .then((data) => (this.genderData = data));
+    },
+    getNationality(value) {
+      fetch("https://api.nationalize.io?name=" + value)
+        .then((response) => response.json())
+        .then((data) => (this.nationalityData = data));
+    },
+    getAll(value) {
+      this.getAge(value);
+      this.getGender(value);
+      this.getNationality(value);
+      let array1 = [];
+      this.allData = [this.ageData, this.genderData, this.nationalityData];
+      this.allData = this.allData[2].country.forEach((country) =>
+        array1.push([this.allData[0], this.allData[1], country])
+      );
+      let array2 = [];
+      array1.forEach((array) =>
+        array2.push({
+          name: array[0].name,
+          age: array[0].age,
+          gender: array[1].gender,
+          "probability of gender": array[1].probability,
+          country: array[2].country_id,
+          "probability of country": array[2].probability,
+        })
+      );
+      this.allData = array2;
+    },
+  },
+}
 </script>
