@@ -50,25 +50,23 @@
     ],
   }),
   methods: {
-    getAge(value) {
-      fetch("https://api.agify.io?name=" + value)
-        .then((response) => response.json())
-        .then((data) => (this.ageData = data));
+    async getAge(value) {
+      let tempAge = await fetch("https://api.agify.io?name=" + value);
+      this.ageData = await tempAge.json();
+        
     },
-    getGender(value) {
-      fetch("https://api.genderize.io?name=" + value)
-        .then((response) => response.json())
-        .then((data) => (this.genderData = data));
+    async getGender(value) {
+      let tempGender = await fetch("https://api.genderize.io?name=" + value);
+      this.genderData = await tempGender.json();
     },
-    getNationality(value) {
-      fetch("https://api.nationalize.io?name=" + value)
-        .then((response) => response.json())
-        .then((data) => (this.nationalityData = data));
+    async getNationality(value) {
+      let tempNationalityData = await fetch("https://api.nationalize.io?name=" + value);
+      this.nationalityData = await tempNationalityData.json();
     },
-    getAll() {
-      this.getAge(this.name);
-      this.getGender(this.name);
-      this.getNationality(this.name);
+    async getAll() {
+      await this.getAge(this.name);
+      await this.getGender(this.name);
+      await this.getNationality(this.name);
       let array1 = [];
       this.allData = [this.ageData, this.genderData, this.nationalityData];
       this.allData = this.allData[2].country.forEach((country) =>
