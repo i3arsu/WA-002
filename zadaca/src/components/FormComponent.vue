@@ -2,9 +2,8 @@
   <v-form>
     <v-container>
         <v-text-field
-            v-model="name"
+            label="name"
             :counter="10"
-            label="Name"
             @change="getAll($event)">
         </v-text-field>
         <v-btn
@@ -16,7 +15,7 @@
         <div>
             <v-data-table
             :items="allData"
-            :items-per-page="5"
+            :items-per-page="10"
             class="elevation-1"
         ></v-data-table>
         </div>
@@ -33,9 +32,9 @@
     genderData: {},
     nationalityData: {},
     allData: [],
+    newData: [],
   }),
-
-    methods: {
+  methods: {
     getAge(value) {
       fetch("https://api.agify.io?name=" + value)
         .then((response) => response.json())
@@ -71,8 +70,8 @@
           "probability of country": array[2].probability,
         })
       );
-      this.allData = array2;
+      array2.forEach((object) => this.newData.push(object));
     },
   },
-}
+};
 </script>
